@@ -27,175 +27,174 @@ import net.miginfocom.swing.MigLayout;
 
 public abstract class CampoPesquisa<T> extends JPanel {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final PesquisableService<T> pesquisableService;
-	private final Long codigoUsuario;
-	private final Long codigoPesquisa;
+    private final PesquisableService<T> pesquisableService;
+    private final Long codigoUsuario;
+    private final Long codigoPesquisa;
 
-	private JButton btPesquisa;
-	private JTextField txValorPesquisa;
-	private T objetoPesquisado;
-	private Boolean pesquisaOk = Boolean.FALSE;
-	private BooleanBuilder preFilter;
-	protected EventListenerList listener = new EventListenerList();
+    private JButton btPesquisa;
+    private JTextField txValorPesquisa;
+    private T objetoPesquisado;
+    private Boolean pesquisaOk = Boolean.FALSE;
+    private BooleanBuilder preFilter;
+    protected EventListenerList listener = new EventListenerList();
 
-	public CampoPesquisa(PesquisableService<T> pesquisableService, Long codigoPesquisa, Long codigoUsuario) {
+    public CampoPesquisa(PesquisableService<T> pesquisableService, Long codigoPesquisa, Long codigoUsuario) {
 
-		this(pesquisableService, codigoPesquisa, codigoUsuario, new BooleanBuilder());
-	}
+        this(pesquisableService, codigoPesquisa, codigoUsuario, new BooleanBuilder());
+    }
 
-	public CampoPesquisa(PesquisableService<T> pesquisableService, Long codigoPesquisa, Long codigoUsuario,
-			BooleanBuilder preFilter) {
+    public CampoPesquisa(PesquisableService<T> pesquisableService, Long codigoPesquisa, Long codigoUsuario, BooleanBuilder preFilter) {
 
-		this.pesquisableService = pesquisableService;
-		this.codigoUsuario = codigoUsuario;
-		this.preFilter = preFilter;
-		this.codigoPesquisa = codigoPesquisa;
+        this.pesquisableService = pesquisableService;
+        this.codigoUsuario = codigoUsuario;
+        this.preFilter = preFilter;
+        this.codigoPesquisa = codigoPesquisa;
 
-		initComponents();
-	}
+        initComponents();
+    }
 
-	private void initComponents() {
-		txValorPesquisa = new JTextField();
-		btPesquisa = new JButton();
+    private void initComponents() {
+        txValorPesquisa = new JTextField();
+        btPesquisa = new JButton();
 
-		btPesquisa.setIcon(ImageUtil.resize("search.png", 16, 16));
-		btPesquisa.setMargin(new Insets(0, 0, 0, 0));
-		btPesquisa.addActionListener(e -> validarPesquisa());
+        btPesquisa.setIcon(ImageUtil.resize("search.png", 16, 16));
+        btPesquisa.setMargin(new Insets(0, 0, 0, 0));
+        btPesquisa.addActionListener(e -> validarPesquisa());
 
-		txValorPesquisa.setEditable(Boolean.FALSE);
+        txValorPesquisa.setEditable(Boolean.FALSE);
 
-		setLayout(new MigLayout("", "[grow][0.00]", "[grow]"));
+        setLayout(new MigLayout("", "[grow][0.00]", "[grow]"));
 
-		add(txValorPesquisa, "growx");
-		add(btPesquisa, "east");
-	}
+        add(txValorPesquisa, "growx");
+        add(btPesquisa, "east");
+    }
 
-	private void validarPesquisa() {
+    private void validarPesquisa() {
 
-		if (validar()) {
-			abrirPesquisa();
-		}
-	}
+        if (validar()) {
+            abrirPesquisa();
+        }
+    }
 
-	public boolean validar() {
+    public boolean validar() {
 
-		return Boolean.TRUE;
-	}
+        return Boolean.TRUE;
+    }
 
-	private void abrirPesquisa() {
+    private void abrirPesquisa() {
 
-		try {
+        try {
 
-			JFrame parent = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
+            JFrame parent = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
 
-			FrmPesquisa<T> frmPesquisa = new FrmPesquisa<>(parent, getPreFilter(), pesquisableService, codigoPesquisa,
-					codigoUsuario);
+            FrmPesquisa<T> frmPesquisa = new FrmPesquisa<>(parent, getPreFilter(), pesquisableService, codigoPesquisa, codigoUsuario);
 
-			frmPesquisa.setVisible(Boolean.TRUE);
+            frmPesquisa.setVisible(Boolean.TRUE);
 
-			this.pesquisaOk = frmPesquisa.getOk();
+            this.pesquisaOk = frmPesquisa.getOk();
 
-			if (frmPesquisa.getOk()) {
+            if (frmPesquisa.getOk()) {
 
-				fireChangeEvent(frmPesquisa.getObjeto(), this.objetoPesquisado);
+                this.objetoPesquisado = frmPesquisa.getObjeto();
 
-				this.objetoPesquisado = frmPesquisa.getObjeto();
+                fireChangeEvent();
 
-				carregarCampo();
+                carregarCampo();
 
-				return;
-			}
+                return;
+            }
 
-		} catch (SysDescException e) {
-			showMessageDialog(null, e.getMensagem(), translate(OPTION_VALIDACAO), JOptionPane.WARNING_MESSAGE);
-		}
+        } catch (SysDescException e) {
+            showMessageDialog(null, e.getMensagem(), translate(OPTION_VALIDACAO), JOptionPane.WARNING_MESSAGE);
+        }
 
-		fireChangeEvent(null, this.objetoPesquisado);
+        txValorPesquisa.setText("");
+        this.objetoPesquisado = null;
 
-		txValorPesquisa.setText("");
-		this.objetoPesquisado = null;
+        fireChangeEvent();
 
-	}
+    }
 
-	private void carregarCampo() {
+    private void carregarCampo() {
 
-		if (this.objetoPesquisado == null) {
+        if (this.objetoPesquisado == null) {
 
-			txValorPesquisa.setText("");
+            txValorPesquisa.setText("");
 
-			return;
-		}
+            return;
+        }
 
-		txValorPesquisa.setText(this.formatarValorCampo(this.objetoPesquisado));
-	}
+        txValorPesquisa.setText(this.formatarValorCampo(this.objetoPesquisado));
 
-	public void setValue(T objeto) {
+    }
 
-		this.objetoPesquisado = objeto;
+    public void setValue(T objeto) {
 
-		fireChangeEvent(objeto, this.objetoPesquisado);
+        this.objetoPesquisado = objeto;
 
-		carregarCampo();
-	}
+        fireChangeEvent();
 
-	@SuppressWarnings("unchecked")
-	public void fireChangeEvent(T newValue, T oldValue) {
-		Object[] listeners = listener.getListenerList();
+        carregarCampo();
+    }
 
-		for (int i = 0; i < listeners.length; i = i + 2) {
+    @SuppressWarnings("unchecked")
+    public void fireChangeEvent() {
+        Object[] listeners = listener.getListenerList();
 
-			if (listeners[i] == ChangeListener.class) {
+        for (int i = 0; i < listeners.length; i = i + 2) {
 
-				((ChangeListener<T>) listeners[i + 1]).valueChanged(newValue, oldValue);
-			}
-		}
-	}
+            if (listeners[i] == ChangeListener.class) {
 
-	public void limpar() {
+                ((ChangeListener<T>) listeners[i + 1]).valueChanged(this.objetoPesquisado);
+            }
+        }
+    }
 
-		this.objetoPesquisado = null;
+    public void limpar() {
 
-		this.txValorPesquisa.setText("");
-	}
+        this.objetoPesquisado = null;
 
-	public void addChangeListener(ChangeListener<T> changeListener) {
+        this.txValorPesquisa.setText("");
+    }
 
-		listener.add(ChangeListener.class, changeListener);
-	}
+    public void addChangeListener(ChangeListener<T> changeListener) {
 
-	public abstract String formatarValorCampo(T objeto);
+        listener.add(ChangeListener.class, changeListener);
+    }
 
-	public Boolean getPesquisaOk() {
-		return pesquisaOk;
-	}
+    public abstract String formatarValorCampo(T objeto);
 
-	public T getObjetoPesquisado() {
-		return objetoPesquisado;
-	}
+    public Boolean getPesquisaOk() {
+        return pesquisaOk;
+    }
 
-	public BooleanBuilder getPreFilter() {
+    public T getObjetoPesquisado() {
+        return objetoPesquisado;
+    }
 
-		return this.preFilter;
-	}
+    public BooleanBuilder getPreFilter() {
 
-	public void bloquear(Boolean editable) {
-		btPesquisa.setEnabled(editable);
-	}
+        return this.preFilter;
+    }
 
-	public void setValueById(Long id) {
+    public void bloquear(Boolean editable) {
+        btPesquisa.setEnabled(editable);
+    }
 
-		if (!LongUtil.isNullOrZero(id)) {
+    public void setValueById(Long id) {
 
-			setValue(pesquisableService.buscarPorId(id));
-		} else {
-			setValue(null);
-		}
-	}
+        if (!LongUtil.isNullOrZero(id)) {
 
-	public void setBackgroundColor(Color color) {
-		this.txValorPesquisa.setBackground(color);
-	}
+            setValue(pesquisableService.buscarPorId(id));
+        } else {
+            setValue(null);
+        }
+    }
+
+    public void setBackgroundColor(Color color) {
+        this.txValorPesquisa.setBackground(color);
+    }
 
 }
