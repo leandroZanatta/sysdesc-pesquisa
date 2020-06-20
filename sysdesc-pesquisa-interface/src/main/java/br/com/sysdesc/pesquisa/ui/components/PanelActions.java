@@ -6,6 +6,7 @@ import static javax.swing.JOptionPane.WARNING_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 import java.awt.event.ActionEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -49,541 +50,542 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class PanelActions<T> extends AbstractButtonAction {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private PesquisableService<T> genericService;
-    protected ButtonActionSalvar btSalvar;
-    protected ButtonActionEditar btEditar;
-    protected ButtonActionNovo btNovo;
-    protected ButtonActionBuscar btBuscar;
-    protected ButtonActionCancelar btCancelar;
+	private PesquisableService<T> genericService;
+	protected ButtonActionSalvar btSalvar;
+	protected ButtonActionEditar btEditar;
+	protected ButtonActionNovo btNovo;
+	protected ButtonActionBuscar btBuscar;
+	protected ButtonActionCancelar btCancelar;
 
-    protected ButtonActionAvancar btAvancar;
-    protected ButtonActionRetroceder btRetroceder;
-    protected ButtonActionPrimeiro btPrimeiro;
-    protected ButtonActionUltimo btUltimo;
+	protected ButtonActionAvancar btAvancar;
+	protected ButtonActionRetroceder btRetroceder;
+	protected ButtonActionPrimeiro btPrimeiro;
+	protected ButtonActionUltimo btUltimo;
 
-    private final JFrame parent = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
-    private final boolean pageable;
-    protected T objetoPesquisa;
-    protected List<ButtonAction> actions = new ArrayList<>();
-    private ActionMap actionMap = new ActionMap();
-    private InputMap inputMap;
-    protected EventListenerList buttonListener = new EventListenerList();
-    protected EventListenerList saveListener = new EventListenerList();
-    protected EventListenerList newListener = new EventListenerList();
+	private final JFrame parent = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
+	private final boolean pageable;
+	protected T objetoPesquisa;
+	protected List<ButtonAction> actions = new ArrayList<>();
+	private ActionMap actionMap = new ActionMap();
+	private InputMap inputMap;
+	protected EventListenerList buttonListener = new EventListenerList();
+	protected EventListenerList saveListener = new EventListenerList();
+	protected EventListenerList newListener = new EventListenerList();
 
-    private final Long codigoPesquisa;
+	private final Long codigoPesquisa;
 
-    public PanelActions(AbstractInternalFrame internalFrame, PesquisableService<T> genericService, Long codigoPesquisa, ButtonAction... actions) {
+	public PanelActions(AbstractInternalFrame internalFrame, PesquisableService<T> genericService, Long codigoPesquisa, ButtonAction... actions) {
 
-        this(internalFrame, genericService, codigoPesquisa, Boolean.TRUE, actions);
-    }
+		this(internalFrame, genericService, codigoPesquisa, Boolean.TRUE, actions);
+	}
 
-    public PanelActions(AbstractInternalFrame internalFrame, PesquisableService<T> genericService, Long codigoPesquisa, Boolean pageable,
-            ButtonAction... actions) {
+	public PanelActions(AbstractInternalFrame internalFrame, PesquisableService<T> genericService, Long codigoPesquisa, Boolean pageable,
+			ButtonAction... actions) {
 
-        super(internalFrame);
+		super(internalFrame);
 
-        this.codigoPesquisa = codigoPesquisa;
-        this.pageable = pageable;
-        this.genericService = genericService;
+		this.codigoPesquisa = codigoPesquisa;
+		this.pageable = pageable;
+		this.genericService = genericService;
 
-        initComponents(actions);
-    }
+		initComponents(actions);
+	}
 
-    private void initComponents(ButtonAction... actions) {
+	private void initComponents(ButtonAction... actions) {
 
-        inputMap = internalFrame.getRootPane().getInputMap(WHEN_IN_FOCUSED_WINDOW);
+		inputMap = internalFrame.getRootPane().getInputMap(WHEN_IN_FOCUSED_WINDOW);
 
-        btSalvar = new ButtonActionSalvar();
-        btEditar = new ButtonActionEditar();
-        btNovo = new ButtonActionNovo();
-        btBuscar = new ButtonActionBuscar();
-        btCancelar = new ButtonActionCancelar();
+		btSalvar = new ButtonActionSalvar();
+		btEditar = new ButtonActionEditar();
+		btNovo = new ButtonActionNovo();
+		btBuscar = new ButtonActionBuscar();
+		btCancelar = new ButtonActionCancelar();
 
-        final PanelActions<T> painel = this;
+		final PanelActions<T> painel = this;
 
-        Action actionSalvar = new AbstractAction() {
+		Action actionSalvar = new AbstractAction() {
 
-            private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveEvent();
-            }
-        };
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				saveEvent();
+			}
+		};
 
-        Action actionEditar = new AbstractAction() {
+		Action actionEditar = new AbstractAction() {
 
-            private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editEvent();
-            }
-        };
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				editEvent();
+			}
+		};
 
-        Action actionNovo = new AbstractAction() {
+		Action actionNovo = new AbstractAction() {
 
-            private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                newEvent(painel);
-            }
-        };
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				newEvent(painel);
+			}
+		};
 
-        Action actionLocalizar = new AbstractAction() {
+		Action actionLocalizar = new AbstractAction() {
 
-            private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                searchEvent();
-            }
-        };
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				searchEvent();
+			}
+		};
 
-        Action actionCancelar = new AbstractAction() {
+		Action actionCancelar = new AbstractAction() {
 
-            private static final long serialVersionUID = 1L;
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 
-                internalFrame.dispose();
-            }
-        };
+				internalFrame.dispose();
+			}
+		};
 
-        if (pageable) {
+		if (pageable) {
 
-            btAvancar = new ButtonActionAvancar();
-            btRetroceder = new ButtonActionRetroceder();
-            btUltimo = new ButtonActionUltimo();
-            btPrimeiro = new ButtonActionPrimeiro();
+			btAvancar = new ButtonActionAvancar();
+			btRetroceder = new ButtonActionRetroceder();
+			btUltimo = new ButtonActionUltimo();
+			btPrimeiro = new ButtonActionPrimeiro();
 
-            Action actionAvancar = new AbstractAction() {
+			Action actionAvancar = new AbstractAction() {
 
-                private static final long serialVersionUID = 1L;
+				private static final long serialVersionUID = 1L;
 
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    avancarEvent();
-                }
-            };
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					avancarEvent();
+				}
+			};
 
-            Action actionRetroceder = new AbstractAction() {
+			Action actionRetroceder = new AbstractAction() {
 
-                private static final long serialVersionUID = 1L;
+				private static final long serialVersionUID = 1L;
 
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    retrocederEvent();
-                }
-            };
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					retrocederEvent();
+				}
+			};
 
-            Action actionUltimo = new AbstractAction() {
+			Action actionUltimo = new AbstractAction() {
 
-                private static final long serialVersionUID = 1L;
+				private static final long serialVersionUID = 1L;
 
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    ultimoEvent();
-                }
-            };
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					ultimoEvent();
+				}
+			};
 
-            Action actionPrimeiro = new AbstractAction() {
+			Action actionPrimeiro = new AbstractAction() {
 
-                private static final long serialVersionUID = 1L;
+				private static final long serialVersionUID = 1L;
 
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    primeiroEvent();
-                }
-            };
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					primeiroEvent();
+				}
+			};
 
-            registrarEvento(btAvancar, actionAvancar);
-            registrarEvento(btRetroceder, actionRetroceder);
-            registrarEvento(btUltimo, actionUltimo);
-            registrarEvento(btPrimeiro, actionPrimeiro);
+			registrarEvento(btAvancar, actionAvancar);
+			registrarEvento(btRetroceder, actionRetroceder);
+			registrarEvento(btUltimo, actionUltimo);
+			registrarEvento(btPrimeiro, actionPrimeiro);
 
-        }
-        registrarEventosBotoesPagina();
+		}
+		registrarEventosBotoesPagina();
 
-        registrarEvento(btSalvar, actionSalvar);
-        registrarEvento(btEditar, actionEditar);
-        registrarEvento(btNovo, actionNovo);
-        registrarEvento(btBuscar, actionLocalizar);
-        registrarEvento(btCancelar, actionCancelar);
+		registrarEvento(btSalvar, actionSalvar);
+		registrarEvento(btEditar, actionEditar);
+		registrarEvento(btNovo, actionNovo);
+		registrarEvento(btBuscar, actionLocalizar);
+		registrarEvento(btCancelar, actionCancelar);
 
-        posicionarEAdicionarBotoes(Arrays.asList(actions));
+		posicionarEAdicionarBotoes(Arrays.asList(actions));
 
-        internalFrame.getRootPane().setActionMap(actionMap);
+		internalFrame.getRootPane().setActionMap(actionMap);
 
-        registrarCampos();
+		registrarCampos();
 
-        limpar();
+		limpar();
 
-        setEditable(Boolean.FALSE);
-        bloquear();
+		setEditable(Boolean.FALSE);
+		bloquear();
 
-        fireButtonListener(ButtonActionListener::startEvent);
-    }
+		fireButtonListener(ButtonActionListener::startEvent);
+	}
 
-    protected void registrarEventosBotoesPagina() {
-    }
+	protected void registrarEventosBotoesPagina() {
+	}
 
-    protected void registrarEvento(ButtonAction buttonAction, Action action) {
+	protected void registrarEvento(ButtonAction buttonAction, Action action) {
 
-        buttonAction.addActionListener(action);
+		buttonAction.addActionListener(action);
 
-        this.addButtonListener(buttonAction);
+		this.addButtonListener(buttonAction);
 
-        if (!StringUtil.isNullOrEmpty(buttonAction.getMapName())) {
+		if (!StringUtil.isNullOrEmpty(buttonAction.getMapName())) {
 
-            inputMap.put(buttonAction.getKeyStroke(), buttonAction.getMapName());
+			inputMap.put(buttonAction.getKeyStroke(), buttonAction.getMapName());
 
-            actionMap.put(buttonAction.getMapName(), action);
+			actionMap.put(buttonAction.getMapName(), action);
 
-        }
-    }
+		}
+	}
 
-    private void searchEvent() {
+	private void searchEvent() {
 
-        boolean pesquisou = pesquisar();
+		boolean pesquisou = pesquisar();
 
-        if (pesquisou) {
+		if (pesquisou) {
 
-            limpar();
+			limpar();
 
-            carregarObjeto(objetoPesquisa);
+			carregarObjeto(objetoPesquisa);
 
-            fireButtonListener(ButtonActionListener::searchEvent);
-        }
-    }
+			fireButtonListener(ButtonActionListener::searchEvent);
+		}
+	}
 
-    public void carregarObjetoPesquisado(T objeto) {
+	public void carregarObjetoPesquisado(T objeto) {
 
-        limpar();
+		limpar();
 
-        setEditable(Boolean.FALSE);
+		setEditable(Boolean.FALSE);
 
-        bloquear();
+		bloquear();
 
-        objetoPesquisa = objeto;
+		objetoPesquisa = objeto;
 
-        carregarObjeto(objetoPesquisa);
+		carregarObjeto(objetoPesquisa);
 
-        fireButtonListener(ButtonActionListener::searchEvent);
+		fireButtonListener(ButtonActionListener::searchEvent);
 
-    }
+	}
 
-    private void editEvent() {
+	private void editEvent() {
 
-        setEditable(Boolean.TRUE);
+		setEditable(Boolean.TRUE);
 
-        bloquear();
+		bloquear();
 
-        fireButtonListener(ButtonActionListener::editEvent);
-    }
+		fireButtonListener(ButtonActionListener::editEvent);
+	}
 
-    private void posicionarEAdicionarBotoes(List<ButtonAction> actions) {
+	private void posicionarEAdicionarBotoes(List<ButtonAction> actions) {
 
-        this.actions.addAll(actions);
-        this.actions.add(btSalvar);
-        this.actions.add(btEditar);
-        this.actions.add(btNovo);
-        this.actions.add(btBuscar);
-        this.actions.add(btCancelar);
+		this.actions.addAll(actions);
+		this.actions.add(btSalvar);
+		this.actions.add(btEditar);
+		this.actions.add(btNovo);
+		this.actions.add(btBuscar);
+		this.actions.add(btCancelar);
 
-        if (pageable) {
+		if (pageable) {
 
-            this.actions.add(btAvancar);
-            this.actions.add(btRetroceder);
-            this.actions.add(btUltimo);
-            this.actions.add(btPrimeiro);
-        }
+			this.actions.add(btAvancar);
+			this.actions.add(btRetroceder);
+			this.actions.add(btUltimo);
+			this.actions.add(btPrimeiro);
+		}
 
-        posicionarBotoes();
+		posicionarBotoes();
 
-        this.actions.stream().sorted(Comparator.comparing(ButtonAction::getOrdem)).forEach(this::add);
-    }
+		this.actions.stream().sorted(Comparator.comparing(ButtonAction::getOrdem)).forEach(this::add);
+	}
 
-    private void saveEvent() {
+	private void saveEvent() {
 
-        try {
+		try {
 
-            if (preencherObjeto(objetoPesquisa)) {
+			if (preencherObjeto(objetoPesquisa)) {
 
-                genericService.validar(objetoPesquisa);
+				genericService.validar(objetoPesquisa);
 
-                genericService.salvar(objetoPesquisa);
+				genericService.salvar(objetoPesquisa);
 
-                setEditable(Boolean.FALSE);
+				setEditable(Boolean.FALSE);
 
-                bloquear();
+				bloquear();
 
-                fireSaveEvent(objetoPesquisa);
+				fireSaveEvent(objetoPesquisa);
 
-                fireButtonListener(ButtonActionListener::saveEvent);
-            }
+				fireButtonListener(ButtonActionListener::saveEvent);
+			}
 
-        } catch (SysDescException sysDescException) {
+		} catch (SysDescException sysDescException) {
 
-            genericService.invalidarObjeto();
+			genericService.invalidarObjeto();
 
-            showMessageDialog(parent, sysDescException.getMensagem(), translate(OPTION_VALIDACAO), WARNING_MESSAGE);
-        }
+			showMessageDialog(parent, sysDescException.getMensagem(), translate(OPTION_VALIDACAO), WARNING_MESSAGE);
+		}
 
-    }
+	}
 
-    protected void posicionarBotoes() {
+	protected void posicionarBotoes() {
 
-        ContadorUtil contadorUtil = new ContadorUtil();
+		ContadorUtil contadorUtil = new ContadorUtil();
 
-        posicionarBotao(contadorUtil, btPrimeiro, pageable);
-        posicionarBotao(contadorUtil, btRetroceder, pageable);
+		posicionarBotao(contadorUtil, btPrimeiro, pageable);
+		posicionarBotao(contadorUtil, btRetroceder, pageable);
 
-        posicionarBotao(contadorUtil, btSalvar, Boolean.TRUE);
-        posicionarBotao(contadorUtil, btEditar, Boolean.TRUE);
-        posicionarBotao(contadorUtil, btNovo, Boolean.TRUE);
-        posicionarBotao(contadorUtil, btBuscar, Boolean.TRUE);
-        posicionarBotao(contadorUtil, btCancelar, Boolean.TRUE);
+		posicionarBotao(contadorUtil, btSalvar, Boolean.TRUE);
+		posicionarBotao(contadorUtil, btEditar, Boolean.TRUE);
+		posicionarBotao(contadorUtil, btNovo, Boolean.TRUE);
+		posicionarBotao(contadorUtil, btBuscar, Boolean.TRUE);
+		posicionarBotao(contadorUtil, btCancelar, Boolean.TRUE);
 
-        posicionarBotao(contadorUtil, btAvancar, pageable);
-        posicionarBotao(contadorUtil, btUltimo, pageable);
+		posicionarBotao(contadorUtil, btAvancar, pageable);
+		posicionarBotao(contadorUtil, btUltimo, pageable);
 
-    }
+	}
 
-    protected void posicionarBotao(ContadorUtil contadorUtil, ButtonAction buttonAction, boolean adicionar) {
+	protected void posicionarBotao(ContadorUtil contadorUtil, ButtonAction buttonAction, boolean adicionar) {
 
-        if (adicionar) {
-            buttonAction.setOrdem(contadorUtil.next().intValue());
-        }
-    }
+		if (adicionar) {
+			buttonAction.setOrdem(contadorUtil.next().intValue());
+		}
+	}
 
-    private void retrocederEvent() {
+	private void retrocederEvent() {
 
-        try {
+		try {
 
-            objetoPesquisa = genericService.previows(getValueId());
+			objetoPesquisa = genericService.previows(getValueId());
 
-            limpar();
+			limpar();
 
-            setEditable(Boolean.FALSE);
+			setEditable(Boolean.FALSE);
 
-            bloquear();
+			bloquear();
 
-            carregarObjeto(objetoPesquisa);
+			carregarObjeto(objetoPesquisa);
 
-            fireButtonListener(ButtonActionListener::searchEvent);
+			fireButtonListener(ButtonActionListener::searchEvent);
 
-        } catch (SysDescException sysDescException) {
+		} catch (SysDescException sysDescException) {
 
-            showMessageDialog(parent, sysDescException.getMensagem(), translate(OPTION_VALIDACAO), WARNING_MESSAGE);
-        }
+			showMessageDialog(parent, sysDescException.getMensagem(), translate(OPTION_VALIDACAO), WARNING_MESSAGE);
+		}
 
-    }
+	}
 
-    private Long getValueId() {
+	private Long getValueId() {
 
-        Long valor = null;
+		Long valor = null;
 
-        if (objetoPesquisa != null) {
-            valor = genericService.getId().apply(objetoPesquisa);
-        }
+		if (objetoPesquisa != null) {
+			valor = genericService.getId().apply(objetoPesquisa);
+		}
 
-        return valor;
-    }
+		return valor;
+	}
 
-    private void ultimoEvent() {
+	private void ultimoEvent() {
 
-        try {
-            objetoPesquisa = genericService.last();
+		try {
+			objetoPesquisa = genericService.last();
 
-            limpar();
+			limpar();
 
-            setEditable(Boolean.FALSE);
+			setEditable(Boolean.FALSE);
 
-            bloquear();
+			bloquear();
 
-            carregarObjeto(objetoPesquisa);
+			carregarObjeto(objetoPesquisa);
 
-            fireButtonListener(ButtonActionListener::searchEvent);
+			fireButtonListener(ButtonActionListener::searchEvent);
 
-        } catch (SysDescException sysDescException) {
+		} catch (SysDescException sysDescException) {
 
-            showMessageDialog(parent, sysDescException.getMensagem(), translate(OPTION_VALIDACAO), WARNING_MESSAGE);
-        }
-    }
+			showMessageDialog(parent, sysDescException.getMensagem(), translate(OPTION_VALIDACAO), WARNING_MESSAGE);
+		}
+	}
 
-    private void primeiroEvent() {
+	private void primeiroEvent() {
 
-        try {
+		try {
 
-            objetoPesquisa = genericService.first();
+			objetoPesquisa = genericService.first();
 
-            limpar();
+			limpar();
 
-            setEditable(Boolean.FALSE);
+			setEditable(Boolean.FALSE);
 
-            bloquear();
+			bloquear();
 
-            carregarObjeto(objetoPesquisa);
+			carregarObjeto(objetoPesquisa);
 
-            fireButtonListener(ButtonActionListener::searchEvent);
+			fireButtonListener(ButtonActionListener::searchEvent);
 
-        } catch (SysDescException sysDescException) {
+		} catch (SysDescException sysDescException) {
 
-            showMessageDialog(parent, sysDescException.getMensagem(), translate(OPTION_VALIDACAO), WARNING_MESSAGE);
-        }
+			showMessageDialog(parent, sysDescException.getMensagem(), translate(OPTION_VALIDACAO), WARNING_MESSAGE);
+		}
 
-    }
+	}
 
-    private void avancarEvent() {
+	private void avancarEvent() {
 
-        try {
+		try {
 
-            objetoPesquisa = genericService.next(getValueId());
+			objetoPesquisa = genericService.next(getValueId());
 
-            limpar();
+			limpar();
 
-            setEditable(Boolean.FALSE);
+			setEditable(Boolean.FALSE);
 
-            bloquear();
+			bloquear();
 
-            carregarObjeto(objetoPesquisa);
+			carregarObjeto(objetoPesquisa);
 
-            fireButtonListener(ButtonActionListener::searchEvent);
+			fireButtonListener(ButtonActionListener::searchEvent);
 
-        } catch (SysDescException sysDescException) {
+		} catch (SysDescException sysDescException) {
 
-            showMessageDialog(parent, sysDescException.getMensagem(), translate(OPTION_VALIDACAO), WARNING_MESSAGE);
-        }
+			showMessageDialog(parent, sysDescException.getMensagem(), translate(OPTION_VALIDACAO), WARNING_MESSAGE);
+		}
 
-    }
+	}
 
-    public boolean pesquisar() {
+	public boolean pesquisar() {
 
-        try {
+		try {
 
-            FrmPesquisa<T> frmPesquisa = new FrmPesquisa<>(parent, getPreFilter(), this.genericService, codigoPesquisa,
-                    this.internalFrame.getCodigoUsuario());
+			FrmPesquisa<T> frmPesquisa = new FrmPesquisa<>(parent, getPreFilter(), this.genericService, codigoPesquisa,
+					this.internalFrame.getCodigoUsuario());
 
-            frmPesquisa.setVisible(Boolean.TRUE);
+			frmPesquisa.setVisible(Boolean.TRUE);
 
-            if (frmPesquisa.getOk()) {
+			if (frmPesquisa.getOk()) {
 
-                this.objetoPesquisa = frmPesquisa.getObjeto();
+				this.objetoPesquisa = frmPesquisa.getObjeto();
 
-                limpar();
+				limpar();
 
-                setEditable(Boolean.FALSE);
+				setEditable(Boolean.FALSE);
 
-                bloquear();
+				bloquear();
 
-                carregarObjeto(objetoPesquisa);
-            }
+				carregarObjeto(objetoPesquisa);
+			}
 
-            return frmPesquisa.getOk();
+			return frmPesquisa.getOk();
 
-        } catch (SysDescException e) {
+		} catch (SysDescException e) {
 
-            showMessageDialog(parent, e.getMensagem(), translate(OPTION_VALIDACAO), JOptionPane.WARNING_MESSAGE);
+			showMessageDialog(parent, e.getMensagem(), translate(OPTION_VALIDACAO), JOptionPane.WARNING_MESSAGE);
 
-            return Boolean.FALSE;
-        }
-    }
+			return Boolean.FALSE;
+		}
+	}
 
-    public BooleanBuilder getPreFilter() {
+	public BooleanBuilder getPreFilter() {
 
-        return new BooleanBuilder();
-    }
+		return new BooleanBuilder();
+	}
 
-    public void addButtonListener(ButtonActionListener buttonActionListener) {
+	public void addButtonListener(ButtonActionListener buttonActionListener) {
 
-        buttonListener.add(ButtonActionListener.class, buttonActionListener);
-    }
+		buttonListener.add(ButtonActionListener.class, buttonActionListener);
+	}
 
-    public void addNewListener(NewListener<T> newListener) {
+	public void addNewListener(NewListener<T> newListener) {
 
-        this.newListener.add(NewListener.class, newListener);
-    }
+		this.newListener.add(NewListener.class, newListener);
+	}
 
-    public void addSaveListener(SaveListener<T> saveListener) {
+	public void addSaveListener(SaveListener<T> saveListener) {
 
-        this.saveListener.add(SaveListener.class, saveListener);
-    }
+		this.saveListener.add(SaveListener.class, saveListener);
+	}
 
-    @SuppressWarnings("unchecked")
-    private void newEvent(PanelActions<T> painel) {
+	@SuppressWarnings("unchecked")
+	private void newEvent(PanelActions<T> painel) {
 
-        try {
+		try {
 
-            objetoPesquisa = (T) ClassTypeUtil.getGenericType(painel.getClass()).newInstance();
+			objetoPesquisa = (T) ClassTypeUtil.getGenericType(painel.getClass()).getDeclaredConstructor().newInstance();
 
-            limpar();
+			limpar();
 
-            setEditable(Boolean.TRUE);
+			setEditable(Boolean.TRUE);
 
-            bloquear();
+			bloquear();
 
-            fireNewEvent(objetoPesquisa);
+			fireNewEvent(objetoPesquisa);
 
-            fireButtonListener(ButtonActionListener::newEvent);
+			fireButtonListener(ButtonActionListener::newEvent);
 
-        } catch (IllegalAccessException | InstantiationException e1) {
+		} catch (IllegalAccessException | InstantiationException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e1) {
 
-            log.error("Erro ao instanciar objeto", e1);
-        }
+			log.error("Erro ao instanciar objeto", e1);
+		}
 
-    }
+	}
 
-    @SuppressWarnings("unchecked")
-    public void fireSaveEvent(T evt) {
-        Object[] listeners = saveListener.getListenerList();
+	@SuppressWarnings("unchecked")
+	public void fireSaveEvent(T evt) {
+		Object[] listeners = saveListener.getListenerList();
 
-        for (int i = 0; i < listeners.length; i = i + 2) {
+		for (int i = 0; i < listeners.length; i = i + 2) {
 
-            if (listeners[i] == SaveListener.class) {
+			if (listeners[i] == SaveListener.class) {
 
-                ((SaveListener<T>) listeners[i + 1]).saveEvent(evt);
-            }
-        }
-    }
+				((SaveListener<T>) listeners[i + 1]).saveEvent(evt);
+			}
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    public void fireNewEvent(T evt) {
-        Object[] listeners = newListener.getListenerList();
+	@SuppressWarnings("unchecked")
+	public void fireNewEvent(T evt) {
+		Object[] listeners = newListener.getListenerList();
 
-        for (int i = 0; i < listeners.length; i = i + 2) {
+		for (int i = 0; i < listeners.length; i = i + 2) {
 
-            if (listeners[i] == NewListener.class) {
+			if (listeners[i] == NewListener.class) {
 
-                ((NewListener<T>) listeners[i + 1]).newEvent(evt);
-            }
-        }
-    }
+				((NewListener<T>) listeners[i + 1]).newEvent(evt);
+			}
+		}
+	}
 
-    private void fireButtonListener(Consumer<ButtonActionListener> consumer) {
+	private void fireButtonListener(Consumer<ButtonActionListener> consumer) {
 
-        Object[] listeners = buttonListener.getListenerList();
+		Object[] listeners = buttonListener.getListenerList();
 
-        for (int i = 0; i < listeners.length; i = i + 2) {
+		for (int i = 0; i < listeners.length; i = i + 2) {
 
-            if (listeners[i] == ButtonActionListener.class) {
+			if (listeners[i] == ButtonActionListener.class) {
 
-                consumer.accept(((ButtonActionListener) listeners[i + 1]));
-            }
-        }
-    }
+				consumer.accept(((ButtonActionListener) listeners[i + 1]));
+			}
+		}
+	}
 
-    public T getObjetoPesquisa() {
-        return objetoPesquisa;
-    }
+	public T getObjetoPesquisa() {
+		return objetoPesquisa;
+	}
 
-    protected abstract void carregarObjeto(T objetoPesquisa);
+	protected abstract void carregarObjeto(T objetoPesquisa);
 
-    public abstract boolean preencherObjeto(T objetoPesquisa);
+	public abstract boolean preencherObjeto(T objetoPesquisa);
 
 }

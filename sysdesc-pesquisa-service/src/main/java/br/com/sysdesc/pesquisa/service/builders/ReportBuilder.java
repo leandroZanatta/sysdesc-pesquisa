@@ -1,11 +1,11 @@
 package br.com.sysdesc.pesquisa.service.builders;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import ar.com.fdvs.dj.core.DynamicJasperHelper;
 import ar.com.fdvs.dj.core.layout.ClassicLayoutManager;
-import ar.com.fdvs.dj.domain.builders.ColumnBuilderException;
 import ar.com.fdvs.dj.domain.builders.FastReportBuilder;
 import br.com.sysdesc.pesquisa.repository.model.Pesquisa;
 import br.com.sysdesc.pesquisa.repository.model.PesquisaCampo;
@@ -35,27 +35,27 @@ public class ReportBuilder<T> {
 		this.size = size;
 	}
 
-	public JasperPrint build() throws ColumnBuilderException, ClassNotFoundException, JRException {
+	public JasperPrint build() throws ClassNotFoundException, JRException {
 
 		fastReportBuilder.setTitle(pesquisa.getDescricao());
 		fastReportBuilder.setDetailHeight(15);
 
 		Long tamanhoVariavel = pesquisa.getPesquisaCampos().stream()
 				.filter(x -> x.getFlagTipoTamanho().equals(TipoTamanhoEnum.FLEX.getCodigo()))
-				.mapToLong(x -> x.getNumeroTamanho()).sum();
+				.mapToLong(PesquisaCampo::getNumeroTamanho).sum();
 
 		Long tamanhoFixo = pesquisa.getPesquisaCampos().stream()
 				.filter(x -> x.getFlagTipoTamanho().equals(TipoTamanhoEnum.PIXELS.getCodigo()))
-				.mapToLong(x -> x.getNumeroTamanho()).sum();
+				.mapToLong(PesquisaCampo::getNumeroTamanho).sum();
 
-		pesquisa.getPesquisaCampos().stream().sorted(Comparator.comparing(PesquisaCampo::getFlagOrdem));
+		Collections.sort(pesquisa.getPesquisaCampos(), Comparator.comparing(PesquisaCampo::getFlagOrdem));
 
-		for (PesquisaCampo pesquisa : pesquisa.getPesquisaCampos()) {
+		for (PesquisaCampo pesquisaCampo : pesquisa.getPesquisaCampos()) {
 
-			Integer tamanho = getTamanhoCampo(pesquisa, tamanhoFixo, tamanhoVariavel);
+			Integer tamanho = getTamanhoCampo(pesquisaCampo, tamanhoFixo, tamanhoVariavel);
 
-			fastReportBuilder.addColumn(pesquisa.getDescricao(), pesquisa.getCampo(),
-					TipoFieldEnum.forCodigo(pesquisa.getFlagTipoDado()).getType().getName(), tamanho);
+			fastReportBuilder.addColumn(pesquisaCampo.getDescricao(), pesquisaCampo.getCampo(),
+					TipoFieldEnum.forCodigo(pesquisaCampo.getFlagTipoDado()).getType().getName(), tamanho);
 		}
 
 		JRDataSource ds = new JRBeanCollectionDataSource(data);
@@ -77,7 +77,7 @@ public class ReportBuilder<T> {
 			return pesquisa.getNumeroTamanho().intValue() * fatorMultiplicador;
 		}
 
-		return (size - tamanhoFixo) / tamanhoVariavel * pesquisa.getNumeroTamanho() * fatorMultiplicador;
+		return (size - tamanhoFixo) / (double) tamanhoVariavel * pesquisa.getNumeroTamanho() * fatorMultiplicador;
 	}
 
 }

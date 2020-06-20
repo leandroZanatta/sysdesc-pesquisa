@@ -1,6 +1,7 @@
 package br.com.sysdesc.pesquisa.components.buttonactions;
 
-import java.awt.event.KeyEvent;
+import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import static java.awt.event.KeyEvent.VK_E;
 
 public class ButtonActionEditar extends ButtonAction {
 
@@ -8,7 +9,7 @@ public class ButtonActionEditar extends ButtonAction {
 
 	public ButtonActionEditar() {
 
-		super("mapEditar", KeyEvent.VK_E, KeyEvent.CTRL_MASK, "edit.png", "Editar");
+		super("mapEditar", VK_E, CTRL_DOWN_MASK, "edit.png", "Editar");
 	}
 
 	@Override

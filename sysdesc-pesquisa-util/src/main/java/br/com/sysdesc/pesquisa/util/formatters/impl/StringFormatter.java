@@ -11,10 +11,6 @@ public class StringFormatter extends JTextField implements Formatter {
 
 	private static final long serialVersionUID = 1L;
 
-	public StringFormatter() {
-
-	}
-
 	@Override
 	public String format(Object value, String format) {
 
@@ -32,6 +28,7 @@ public class StringFormatter extends JTextField implements Formatter {
 
 	@Override
 	public Component getComponent() {
+
 		return this;
 	}
 

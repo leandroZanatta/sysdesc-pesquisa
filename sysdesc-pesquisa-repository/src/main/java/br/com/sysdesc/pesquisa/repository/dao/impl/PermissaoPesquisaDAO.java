@@ -7,7 +7,6 @@ import java.util.List;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPADeleteClause;
 
-import br.com.sysdesc.pesquisa.repository.dao.impl.PesquisableDAOImpl;
 import br.com.sysdesc.pesquisa.repository.model.PermissaoPesquisa;
 import br.com.sysdesc.util.classes.LongUtil;
 

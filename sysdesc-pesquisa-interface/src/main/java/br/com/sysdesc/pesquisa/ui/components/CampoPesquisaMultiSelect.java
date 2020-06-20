@@ -70,8 +70,8 @@ public abstract class CampoPesquisaMultiSelect<T> extends JPanel {
 		}
 	}
 
-	public Boolean validar() {
-		return Boolean.TRUE;
+	public boolean validar() {
+		return true;
 	}
 
 	private void abrirPesquisa() {
@@ -79,7 +79,7 @@ public abstract class CampoPesquisaMultiSelect<T> extends JPanel {
 		try {
 			JFrame parent = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
 
-			FrmPesquisa<T> frmPesquisa = new FrmPesquisa<T>(parent, getPreFilter(), genericService, codigoPesquisa,
+			FrmPesquisa<T> frmPesquisa = new FrmPesquisa<>(parent, getPreFilter(), genericService, codigoPesquisa,
 					codigoUsuario, Boolean.TRUE);
 
 			frmPesquisa.setVisible(Boolean.TRUE);
@@ -110,7 +110,7 @@ public abstract class CampoPesquisaMultiSelect<T> extends JPanel {
 		carregarCampo();
 	}
 
-	protected <K> void carregarCampo() {
+	protected void carregarCampo() {
 
 		if (ListUtil.isNullOrEmpty(this.objetosPesquisados)) {
 
@@ -121,7 +121,7 @@ public abstract class CampoPesquisaMultiSelect<T> extends JPanel {
 
 		txValorPesquisa.setText(this.formatarValorCampo());
 
-	};
+	}
 
 	private String formatarValorCampo() {
 

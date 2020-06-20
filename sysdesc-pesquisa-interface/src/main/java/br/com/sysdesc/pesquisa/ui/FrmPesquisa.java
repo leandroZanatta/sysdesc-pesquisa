@@ -9,8 +9,6 @@ import static br.com.sysdesc.util.resources.Resources.translate;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -164,24 +162,19 @@ public class FrmPesquisa<T> extends JDialog {
 
 		btnSelecionar.addActionListener((e) -> selecionarRegistro());
 
-		scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+		scrollPane.getVerticalScrollBar().addAdjustmentListener(e -> {
 
-			@Override
-			public void adjustmentValueChanged(AdjustmentEvent e) {
+			int extent = scrollPane.getVerticalScrollBar().getModel().getExtent();
+			int maximum = scrollPane.getVerticalScrollBar().getMaximum();
+			int vPos = scrollPane.getVerticalScrollBar().getValue();
 
-				int extent = scrollPane.getVerticalScrollBar().getModel().getExtent();
-				int maximum = scrollPane.getVerticalScrollBar().getMaximum();
-				int vPos = scrollPane.getVerticalScrollBar().getValue();
-
-				if (vPos + extent >= maximum) {
-					pesquisar();
-				}
-
+			if (vPos + extent >= maximum) {
+				pesquisar();
 			}
 		});
 
 		btImprimir.setIcon(ImageUtil.resize("print.png", 20, 20));
-		btImprimir.addActionListener((e) -> imprimir());
+		btImprimir.addActionListener(e -> imprimir());
 
 		scrollPane.setViewportView(table);
 
@@ -282,7 +275,7 @@ public class FrmPesquisa<T> extends JDialog {
 
 	private void selecionarPesquisa(List<Pesquisa> pesquisa) {
 
-		if (pesquisa.size() == 0) {
+		if (pesquisa.isEmpty()) {
 			throw new SysDescException(MENSAGEM_PESQUISA_NAO_CONFIGURADA);
 		}
 
@@ -302,7 +295,7 @@ public class FrmPesquisa<T> extends JDialog {
 
 			JMenuItem jMenuItem = new JMenuItem(p.getDescricao());
 
-			jMenuItem.addActionListener((l) -> salvarPesquisaPadrao(p));
+			jMenuItem.addActionListener(l -> salvarPesquisaPadrao(p));
 
 			popup.add(jMenuItem);
 		});
@@ -311,7 +304,7 @@ public class FrmPesquisa<T> extends JDialog {
 
 		popup.setPreferredSize(new Dimension(200, height));
 
-		btConfigurar.addActionListener((l) -> {
+		btConfigurar.addActionListener(l -> {
 
 			Point p = btConfigurar.getLocationOnScreen();
 
@@ -347,7 +340,7 @@ public class FrmPesquisa<T> extends JDialog {
 
 		List<PesquisaCampo> campos = pesquisaExibir.getPesquisaCampos();
 
-		this.genericTableModel = new GenericTableModel<T>(campos);
+		this.genericTableModel = new GenericTableModel<>(campos);
 
 		this.table.setModel(genericTableModel);
 

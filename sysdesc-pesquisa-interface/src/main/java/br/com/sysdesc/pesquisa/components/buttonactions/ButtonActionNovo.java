@@ -1,6 +1,7 @@
 package br.com.sysdesc.pesquisa.components.buttonactions;
 
-import java.awt.event.KeyEvent;
+import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import static java.awt.event.KeyEvent.VK_N;
 
 public class ButtonActionNovo extends ButtonAction {
 
@@ -8,7 +9,7 @@ public class ButtonActionNovo extends ButtonAction {
 
 	public ButtonActionNovo() {
 
-		super("mapNovo", KeyEvent.VK_N, KeyEvent.CTRL_MASK, "new.png", "Novo");
+		super("mapNovo", VK_N, CTRL_DOWN_MASK, "new.png", "Novo");
 	}
 
 	@Override

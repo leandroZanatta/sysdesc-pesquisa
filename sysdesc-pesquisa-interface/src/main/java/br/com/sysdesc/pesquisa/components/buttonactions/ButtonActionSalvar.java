@@ -1,6 +1,7 @@
 package br.com.sysdesc.pesquisa.components.buttonactions;
 
-import java.awt.event.KeyEvent;
+import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import static java.awt.event.KeyEvent.VK_S;
 
 public class ButtonActionSalvar extends ButtonAction {
 
@@ -8,7 +9,7 @@ public class ButtonActionSalvar extends ButtonAction {
 
 	public ButtonActionSalvar() {
 
-		super("mapSalvar", KeyEvent.VK_S, KeyEvent.CTRL_MASK, "save.png", "Salvar");
+		super("mapSalvar", VK_S, CTRL_DOWN_MASK, "save.png", "Salvar");
 	}
 
 	@Override

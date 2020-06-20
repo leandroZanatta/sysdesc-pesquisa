@@ -1,6 +1,7 @@
 package br.com.sysdesc.pesquisa.components.buttonactions;
 
-import java.awt.event.KeyEvent;
+import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import static java.awt.event.KeyEvent.VK_L;
 
 public class ButtonActionBuscar extends ButtonAction {
 
@@ -8,7 +9,7 @@ public class ButtonActionBuscar extends ButtonAction {
 
 	public ButtonActionBuscar() {
 
-		super("mapBuscar", KeyEvent.VK_L, KeyEvent.CTRL_MASK, "search.png", "Pesquisar");
+		super("mapBuscar", VK_L, CTRL_DOWN_MASK, "search.png", "Pesquisar");
 	}
 
 	@Override

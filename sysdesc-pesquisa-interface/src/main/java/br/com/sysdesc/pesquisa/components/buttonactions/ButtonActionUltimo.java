@@ -1,6 +1,7 @@
 package br.com.sysdesc.pesquisa.components.buttonactions;
 
-import java.awt.event.KeyEvent;
+import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import static java.awt.event.KeyEvent.VK_PAGE_DOWN;
 
 public class ButtonActionUltimo extends ButtonAction {
 
@@ -8,7 +9,7 @@ public class ButtonActionUltimo extends ButtonAction {
 
 	public ButtonActionUltimo() {
 
-		super("mapUltimo", KeyEvent.VK_PAGE_DOWN, KeyEvent.CTRL_MASK, "last.png", "Último");
+		super("mapUltimo", VK_PAGE_DOWN, CTRL_DOWN_MASK, "last.png", "Último");
 	}
 
 	@Override

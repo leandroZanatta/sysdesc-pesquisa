@@ -140,9 +140,4 @@ public class ProjectionsTableModel extends AbstractInternalFrameTable {
 		fireTableDataChanged();
 	}
 
-	@Override
-	public void setEnabled(Boolean enabled) {
-
-	}
-
 }

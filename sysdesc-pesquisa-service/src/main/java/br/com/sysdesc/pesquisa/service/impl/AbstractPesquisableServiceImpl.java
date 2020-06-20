@@ -13,90 +13,91 @@ import br.com.sysdesc.util.exception.SysDescException;
 
 public class AbstractPesquisableServiceImpl<T> implements PesquisableService<T> {
 
-    private final PesquisableDAO<T> pesquisableDAO;
+	private final PesquisableDAO<T> pesquisableDAO;
 
-    private final Function<T, Long> id;
+	private final Function<T, Long> id;
 
-    public AbstractPesquisableServiceImpl(PesquisableDAO<T> pesquisableDAO, Function<T, Long> id) {
-        this.pesquisableDAO = pesquisableDAO;
-        this.id = id;
-    }
+	public AbstractPesquisableServiceImpl(PesquisableDAO<T> pesquisableDAO, Function<T, Long> id) {
+		this.pesquisableDAO = pesquisableDAO;
+		this.id = id;
+	}
 
-    @Override
-    public void salvar(T objetoPersistir) {
+	@Override
+	public void salvar(T objetoPersistir) {
 
-        pesquisableDAO.salvar(objetoPersistir);
-    }
+		pesquisableDAO.salvar(objetoPersistir);
+	}
 
-    @Override
-    public void validar(T objetoPersistir) {
-    }
+	@Override
+	public void validar(T objetoPersistir) {
+		// Método abstrato utilizado para efetuar validação de telas que necessitam.
+	}
 
-    @Override
-    public Function<T, Long> getId() {
-        return id;
-    }
+	@Override
+	public Function<T, Long> getId() {
+		return id;
+	}
 
-    @Override
-    public T previows(Long valueId) {
+	@Override
+	public T previows(Long valueId) {
 
-        return validarObjeto(pesquisableDAO.previows(valueId));
-    }
+		return validarObjeto(pesquisableDAO.previows(valueId));
+	}
 
-    @Override
-    public T last() {
+	@Override
+	public T last() {
 
-        return validarObjeto(pesquisableDAO.last());
-    }
+		return validarObjeto(pesquisableDAO.last());
+	}
 
-    @Override
-    public T first() {
+	@Override
+	public T first() {
 
-        return validarObjeto(pesquisableDAO.first());
-    }
+		return validarObjeto(pesquisableDAO.first());
+	}
 
-    @Override
-    public T next(Long valueId) {
+	@Override
+	public T next(Long valueId) {
 
-        return validarObjeto(pesquisableDAO.next(valueId));
-    }
+		return validarObjeto(pesquisableDAO.next(valueId));
+	}
 
-    @Override
-    public T buscarPorId(Long id) {
+	@Override
+	public T buscarPorId(Long id) {
 
-        return validarObjeto(pesquisableDAO.obterPorId(id));
-    }
+		return validarObjeto(pesquisableDAO.obterPorId(id));
+	}
 
-    @Override
-    public List<T> pesquisar(boolean selected, String pesquisa, BooleanBuilder preFilter, Pesquisa pesquisaExibir, Integer rows) {
+	@Override
+	public List<T> pesquisar(boolean selected, String pesquisa, BooleanBuilder preFilter, Pesquisa pesquisaExibir, Integer rows) {
 
-        return pesquisableDAO.pesquisar(selected, pesquisa, preFilter, pesquisaExibir, rows);
-    }
+		return pesquisableDAO.pesquisar(selected, pesquisa, preFilter, pesquisaExibir, rows);
+	}
 
-    @Override
-    public List<T> pesquisarTodos(boolean selected, String pesquisa, BooleanBuilder preFilter, Pesquisa pesquisaExibir) {
+	@Override
+	public List<T> pesquisarTodos(boolean selected, String pesquisa, BooleanBuilder preFilter, Pesquisa pesquisaExibir) {
 
-        return pesquisableDAO.pesquisarTodos(selected, pesquisa, preFilter, pesquisaExibir);
-    }
+		return pesquisableDAO.pesquisarTodos(selected, pesquisa, preFilter, pesquisaExibir);
+	}
 
-    @Override
-    public Long count(boolean selected, String pesquisa, BooleanBuilder preFilter, Pesquisa pesquisaExibir) {
+	@Override
+	public Long count(boolean selected, String pesquisa, BooleanBuilder preFilter, Pesquisa pesquisaExibir) {
 
-        return pesquisableDAO.count(selected, pesquisa, preFilter, pesquisaExibir);
-    }
+		return pesquisableDAO.count(selected, pesquisa, preFilter, pesquisaExibir);
+	}
 
-    private T validarObjeto(T objetoPesquisa) {
+	private T validarObjeto(T objetoPesquisa) {
 
-        if (objetoPesquisa == null) {
-            throw new SysDescException(MensagemConstants.MENSAGEM_NENHUM_REGISTRO_ENCONTRADO);
-        }
+		if (objetoPesquisa == null) {
+			throw new SysDescException(MensagemConstants.MENSAGEM_NENHUM_REGISTRO_ENCONTRADO);
+		}
 
-        return objetoPesquisa;
-    }
+		return objetoPesquisa;
+	}
 
-    @Override
-    public void invalidarObjeto() {
+	@Override
+	public void invalidarObjeto() {
 
-        pesquisableDAO.invalidarObjeto();
-    }
+		pesquisableDAO.invalidarObjeto();
+	}
 }
