@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
@@ -50,6 +51,8 @@ public abstract class AbstractButtonAction extends JPanel {
 				findComponents(((JScrollPane) component).getViewport());
 			} else if (component instanceof JPanel) {
 				findComponents((Container) component);
+			} else if (component instanceof JTabbedPane) {
+				findComponents((JTabbedPane) component);
 			} else {
 
 				if (component instanceof JTextField) {
