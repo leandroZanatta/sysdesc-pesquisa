@@ -1,6 +1,6 @@
 package br.com.sysdesc.pesquisa.util.formatters.impl;
 
-import static br.com.sysdesc.util.constants.MensagemConstants.MENSAGEM_SELECIONE_UMA_FORMATACAO;
+import static br.com.sysdesc.util.constants.MensagemUtilConstants.MENSAGEM_SELECIONE_UMA_FORMATACAO;
 
 import java.awt.Component;
 import java.util.Date;

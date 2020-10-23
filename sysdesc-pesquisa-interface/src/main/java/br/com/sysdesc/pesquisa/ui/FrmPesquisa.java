@@ -1,8 +1,8 @@
 package br.com.sysdesc.pesquisa.ui;
 
-import static br.com.sysdesc.util.constants.MensagemConstants.MENSAGEM_PESQUISA_NAO_CONFIGURADA;
-import static br.com.sysdesc.util.constants.MensagemConstants.MENSAGEM_SELECIONE_APENAS_UM_REGISTRO;
-import static br.com.sysdesc.util.constants.MensagemConstants.MENSAGEM_SELECIONE_UM_REGISTRO;
+import static br.com.sysdesc.util.constants.MensagemUtilConstants.MENSAGEM_PESQUISA_NAO_CONFIGURADA;
+import static br.com.sysdesc.util.constants.MensagemUtilConstants.MENSAGEM_SELECIONE_APENAS_UM_REGISTRO;
+import static br.com.sysdesc.util.constants.MensagemUtilConstants.MENSAGEM_SELECIONE_UM_REGISTRO;
 import static br.com.sysdesc.util.resources.Resources.FRMLOGIN_MSG_VERIFICACAO;
 import static br.com.sysdesc.util.resources.Resources.translate;
 

@@ -7,7 +7,7 @@ import br.com.sysdesc.pesquisa.repository.model.Pesquisa;
 import br.com.sysdesc.util.classes.ListUtil;
 import br.com.sysdesc.util.classes.LongUtil;
 import br.com.sysdesc.util.classes.StringUtil;
-import br.com.sysdesc.util.constants.MensagemConstants;
+import br.com.sysdesc.util.constants.MensagemUtilConstants;
 import br.com.sysdesc.util.exception.SysDescException;
 
 public class PesquisaBasicaService extends AbstractPesquisableServiceImpl<Pesquisa> {
@@ -29,22 +29,22 @@ public class PesquisaBasicaService extends AbstractPesquisableServiceImpl<Pesqui
 
 		if (StringUtil.isNullOrEmpty(objetoPersistir.getDescricao())) {
 
-			throw new SysDescException(MensagemConstants.MENSAGEM_INSIRA_DESCRICAO_VALIDA);
+			throw new SysDescException(MensagemUtilConstants.MENSAGEM_INSIRA_DESCRICAO_VALIDA);
 		}
 
 		if (LongUtil.isNullOrZero(objetoPersistir.getPaginacao())) {
 
-			throw new SysDescException(MensagemConstants.MENSAGEM_INSIRA_PAGINACAO_VALIDA);
+			throw new SysDescException(MensagemUtilConstants.MENSAGEM_INSIRA_PAGINACAO_VALIDA);
 		}
 
 		if (LongUtil.isNullOrZero(objetoPersistir.getCodigoPesquisa())) {
 
-			throw new SysDescException(MensagemConstants.MENSAGEM_PEQUISA_VALIDA);
+			throw new SysDescException(MensagemUtilConstants.MENSAGEM_PEQUISA_VALIDA);
 		}
 
 		if (ListUtil.isNullOrEmpty(objetoPersistir.getPesquisaCampos())) {
 
-			throw new SysDescException(MensagemConstants.MENSAGEM_SELECIONE_CAMPO_PESQUISA);
+			throw new SysDescException(MensagemUtilConstants.MENSAGEM_SELECIONE_CAMPO_PESQUISA);
 		}
 	}
 

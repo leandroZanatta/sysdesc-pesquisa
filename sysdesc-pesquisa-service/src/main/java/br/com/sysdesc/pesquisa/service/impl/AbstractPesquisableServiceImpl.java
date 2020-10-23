@@ -8,7 +8,7 @@ import com.mysema.query.BooleanBuilder;
 import br.com.sysdesc.pesquisa.repository.dao.PesquisableDAO;
 import br.com.sysdesc.pesquisa.repository.model.Pesquisa;
 import br.com.sysdesc.pesquisa.service.PesquisableService;
-import br.com.sysdesc.util.constants.MensagemConstants;
+import br.com.sysdesc.util.constants.MensagemUtilConstants;
 import br.com.sysdesc.util.exception.SysDescException;
 
 public class AbstractPesquisableServiceImpl<T> implements PesquisableService<T> {
@@ -89,7 +89,7 @@ public class AbstractPesquisableServiceImpl<T> implements PesquisableService<T> 
 	private T validarObjeto(T objetoPesquisa) {
 
 		if (objetoPesquisa == null) {
-			throw new SysDescException(MensagemConstants.MENSAGEM_NENHUM_REGISTRO_ENCONTRADO);
+			throw new SysDescException(MensagemUtilConstants.MENSAGEM_NENHUM_REGISTRO_ENCONTRADO);
 		}
 
 		return objetoPesquisa;

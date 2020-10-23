@@ -1,6 +1,6 @@
 package br.com.sysdesc.pesquisa.util.formatters.impl;
 
-import static br.com.sysdesc.util.constants.MensagemConstants.MENSAGEM_INSIRA_NUMERO_CASAS_DECIMAIS;
+import static br.com.sysdesc.util.constants.MensagemUtilConstants.MENSAGEM_INSIRA_NUMERO_CASAS_DECIMAIS;
 
 import java.awt.Component;
 import java.math.BigDecimal;
