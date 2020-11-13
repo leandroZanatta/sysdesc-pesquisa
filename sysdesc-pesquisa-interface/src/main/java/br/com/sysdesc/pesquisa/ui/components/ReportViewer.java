@@ -16,6 +16,18 @@ public class ReportViewer extends JDialog {
 	protected net.sf.jasperreports.swing.JRViewer viewer;
 	private JPanel pnlMain;
 
+	public ReportViewer(JasperPrint jasperPrint) {
+		setModal(true);
+
+		initComponents();
+
+		this.viewer = new net.sf.jasperreports.swing.JRViewer(DefaultJasperReportsContext.getInstance(), jasperPrint,
+				null, null);
+
+		this.pnlMain.add(this.viewer, BorderLayout.CENTER);
+
+	}
+
 	public ReportViewer(JDialog parent, JasperPrint jasperPrint) {
 		super(parent, Boolean.TRUE);
 

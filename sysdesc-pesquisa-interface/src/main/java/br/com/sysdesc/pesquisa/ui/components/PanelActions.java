@@ -360,6 +360,8 @@ public abstract class PanelActions<T> extends AbstractButtonAction {
 
 		if (adicionar) {
 			buttonAction.setOrdem(contadorUtil.next().intValue());
+		} else {
+			buttonAction.setVisible(false);
 		}
 	}
 
