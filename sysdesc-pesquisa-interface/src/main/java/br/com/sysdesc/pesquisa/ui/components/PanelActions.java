@@ -73,6 +73,7 @@ public abstract class PanelActions<T> extends AbstractButtonAction {
 	protected EventListenerList buttonListener = new EventListenerList();
 	protected EventListenerList saveListener = new EventListenerList();
 	protected EventListenerList newListener = new EventListenerList();
+	private BooleanBuilder preFilter = new BooleanBuilder();
 
 	private final Long codigoPesquisa;
 
@@ -500,7 +501,12 @@ public abstract class PanelActions<T> extends AbstractButtonAction {
 
 	public BooleanBuilder getPreFilter() {
 
-		return new BooleanBuilder();
+		return this.preFilter;
+	}
+
+	public void setPreFilter(BooleanBuilder preFilter) {
+
+		this.preFilter = preFilter;
 	}
 
 	public void addButtonListener(ButtonActionListener buttonActionListener) {

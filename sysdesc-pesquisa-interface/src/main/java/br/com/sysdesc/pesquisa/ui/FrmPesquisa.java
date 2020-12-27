@@ -9,6 +9,7 @@ import static br.com.sysdesc.util.resources.Resources.translate;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -17,6 +18,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -28,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 
 import com.mysema.query.BooleanBuilder;
 
@@ -64,6 +70,8 @@ public class FrmPesquisa<T> extends JDialog {
 	private JButton btnPesquisar;
 	private JButton btnSelecionar;
 	private JCheckBox chckbxContm;
+	private InputMap inputMap;
+	private ActionMap actionMap = new ActionMap();
 
 	private Boolean ok = Boolean.FALSE;
 	private List<T> objeto = new ArrayList<>();
@@ -105,6 +113,7 @@ public class FrmPesquisa<T> extends JDialog {
 		setSize(800, 450);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout(0, 0));
+		inputMap = this.getRootPane().getInputMap();
 
 		panelBotton = new JPanel();
 		txPesquisa = new JTextFieldMaiusculo();
@@ -117,6 +126,23 @@ public class FrmPesquisa<T> extends JDialog {
 		chckbxContm = new JCheckBox("Contém");
 		scrollPane = new JScrollPane();
 		table = new JTable();
+
+		Action actionCancelar = new AbstractAction() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				dispose();
+			}
+		};
+
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "mapCancelar");
+
+		actionMap.put("mapCancelar", actionCancelar);
+
+		this.getRootPane().setActionMap(actionMap);
 
 		panelBotton.setLayout(new MigLayout("", "[grow][][]", "[14px]"));
 		panelHeader.setLayout(new MigLayout("", "[63px,left][86px,grow][79px][81px]", "[23px]"));
@@ -335,6 +361,8 @@ public class FrmPesquisa<T> extends JDialog {
 	}
 
 	private void carregarCampos() {
+
+		setTitle(pesquisaExibir.getDescricao());
 
 		chckbxContm.setSelected(Boolean.TRUE);
 
