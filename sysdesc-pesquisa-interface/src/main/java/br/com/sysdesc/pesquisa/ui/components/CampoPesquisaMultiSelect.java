@@ -158,4 +158,9 @@ public abstract class CampoPesquisaMultiSelect<T> extends JPanel {
 	public void setBackgroundColor(Color color) {
 		this.txValorPesquisa.setBackground(color);
 	}
+
+	public String getText() {
+
+		return this.txValorPesquisa.getText();
+	}
 }
